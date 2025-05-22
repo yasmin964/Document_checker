@@ -40,7 +40,7 @@
 Затем установите зависимости:
 
 ```bash
-pip install pytesseract pillow pdf2image pdfplumber openpyxl
+pip install pytesseract pdf2image openpyxl
 ````
 
 ---
