@@ -1,12 +1,7 @@
-
-
-import tempfile
 import pytesseract
-from PIL import Image
 import os
 import re
 from pdf2image import convert_from_path
-import pdfplumber
 
 os.environ['TESSDATA_PREFIX'] = '/usr/local/share/tessdata/'
 # Пути к tesseract и poppler
@@ -29,7 +24,7 @@ def detect_orientation(image):
             return int(angle_match.group(1))
     except:
         pass
-    return 0  # если не удалось определить — не вращаем
+    return 0 
 
 
 def extract_text_from_images(images):
@@ -87,31 +82,7 @@ def fix_ocr_mistakes(text):
         '‘': "'", '’': "'",
         '№': '#', 'N°': '#',
         '₽': 'руб', '€': 'EUR', '$': 'USD',
-        ',': '.',  # для десятичных разделителей
-
-        # Общие ошибки
-        'VHH/KNN': 'ИНН/КПП',
-        'nogmgrena': 'покупателя',
-        'Banwra': 'Валюта',
-        'HanNmmpaaHve': 'Наименование',
-        'UgexTupuka': 'Идентификатор',
-        'OCyfaPCcTBeHHOLO': 'государственного',
-        'KOHTPakTa': 'контракта',
-        'Aorosopa': 'договора',
-        'cornaweHwr': 'соглашения',
-        '3MepeHHA': 'измерения',
-        'TOBAaNA': 'товара',
-        'CTOUMOCTb': 'Стоимость',
-        'Nponcxo*GeHHA': 'происхождения',
-        'estan': 'страна',
-        'ucnonb3yeman': 'используется',
-        'poceniickui': 'российский',
-        'pyGnb': 'рубль',
-        'AkkyMyATOD': 'Аккумулятор',
-        'SMP': 'SMP',
-        'Kopea': 'Корея',
-        'Bes axyn3a': 'без акциза',
-        'Tnasreid 6yxrantep': 'Главный бухгалтер',
+        ',': '.',  
     }
 
     for src, target in replacements.items():
@@ -137,33 +108,32 @@ with open(output_file, 'w', encoding='utf-8') as out:
             except Exception as e:
                 print(f"Ошибка при обработке {filename}: {e}")
 
-print(f"\n✅ Текст сохранён в: {output_file}")
+print(f"\n Текст сохранён в: {output_file}")
 
-# import pandas as pd
-#
-#
-# def extract_text_from_excel(file_path):
-#     df = pd.read_excel(file_path)
-#
-#     text_lines = []
-#
-#     for index, row in df.iterrows():
-#         line = ' '.join([str(val) for val in row if pd.notnull(val)])
-#         if any(char.isdigit() for char in line):
-#             text_lines.append(line)
-#
-#     return '\n'.join(text_lines)
-#
-#
-# # пример использования
-# excel_path = "тест.xls"
-# excel_text = extract_text_from_excel(excel_path)
-#
-#
-# with open("excel_text.txt", "w", encoding="utf-8") as f:
-#     f.write(excel_text)
-#
-#
+import pandas as pd
+
+
+def extract_text_from_excel(file_path):
+    df = pd.read_excel(file_path)
+
+    text_lines = []
+
+    for index, row in df.iterrows():
+        line = ' '.join([str(val) for val in row if pd.notnull(val)])
+        if any(char.isdigit() for char in line):
+            text_lines.append(line)
+
+    return '\n'.join(text_lines)
+
+
+# пример использования
+excel_path = "тест.xls"
+excel_text = extract_text_from_excel(excel_path)
+
+
+with open("excel_text.txt", "w", encoding="utf-8") as f:
+    f.write(excel_text)
+
 
 
 
